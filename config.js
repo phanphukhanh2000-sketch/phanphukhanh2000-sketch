@@ -16,6 +16,6 @@ window.SITE = {
 
   // Ảnh trong banner ở đầu trang chủ (không bắt buộc)
   hero: {
-    image: ''     // tên file hoặc link ảnh. Để trống '' = dùng màu xanh chuyển sắc
+    image: 'pexels-jorgeural-9169974.jpg'     // tên file hoặc link ảnh. Để trống '' = dùng màu xanh chuyển sắc
   }
 };
