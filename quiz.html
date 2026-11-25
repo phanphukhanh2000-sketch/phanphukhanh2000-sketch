@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Làm bài</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--tx:#1c2233;--mut:#69708a;--pri:#2b4fb8;--pt:#fff;--ok:#1a7f4b;--okb:#e3f5ea;--bad:#c0392b;--badb:#fbe7e4;--bd:#d9dde8;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151f;--card:#1b2030;--tx:#e8eaf2;--mut:#98a0b8;--pri:#7c9bff;--pt:#10131c;--ok:#5fd18f;--okb:#183526;--bad:#ff8a7a;--badb:#3a1e1b;--bd:#313852;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12151f;--card:#1b2030;--tx:#e8eaf2;--mut:#98a0b8;--pri:#7c9bff;--pt:#10131c;--ok:#5fd18f;--okb:#183526;--bad:#ff8a7a;--badb:#3a1e1b;--bd:#313852;color-scheme:dark}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+main{max-width:760px;margin:0 auto;padding:16px 14px 80px}
+h1{font-size:1.35rem;margin:6px 0 2px}h2{font-size:1.05rem;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin:12px 0}
+.mut{color:var(--mut);font-size:.9rem}
+button{font:inherit;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:9px 14px;cursor:pointer}
+button.pri{background:var(--pri);color:var(--pt);border-color:var(--pri);font-weight:600}
+button:disabled{opacity:.5;cursor:default}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:2px 0 6px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5}
+.tabs button{flex:0 0 auto;white-space:nowrap}.tabs button.on{background:var(--pri);color:var(--pt);border-color:var(--pri)}
+input.t{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:4px 8px;min-width:0}
+input.gap{width:8.5em;margin:0 3px}input.wide{width:100%;max-width:420px;margin:4px 0}
+input.ok,.opt.ok{border-color:var(--ok);background:var(--okb)}input.bad,.opt.bad{border-color:var(--bad);background:var(--badb)}
+.q{margin:14px 0;padding-bottom:10px;border-bottom:1px dashed var(--bd)}.q:last-child{border:0}
+.n{font-weight:700;margin-right:8px}.key{font-weight:700;border:1px solid var(--bd);border-radius:6px;padding:0 6px;margin-left:4px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}@media(max-width:520px){.opts{grid-template-columns:1fr}}
+.opt{display:flex;gap:8px;align-items:center;border:1px solid var(--bd);border-radius:8px;padding:7px 10px;cursor:pointer}
+.fb{font-size:.88rem;margin-top:4px;color:var(--bad)}.fb.g{color:var(--ok)}
+.score{font-size:2.4rem;font-weight:800;color:var(--pri)}
+table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{padding:6px 8px;border-bottom:1px solid var(--bd);text-align:left}
+.sc{overflow-x:auto}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+</style></head><body><main id="app"></main>
+<script>
+const id=(new URLSearchParams(location.search).get('id')||'').toLowerCase(),A=document.getElementById('app');
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=s=>String(s||'').toLowerCase().replace(/[’‘`]/g,"'").replace(/\bi've\b/g,'i have').replace(/[.,!?;]/g,'').replace(/\s+/g,' ').trim();
+let Q,ans={},name='',view='start',sec=0,res=null,sure=false;
+const get=k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},put=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const home='<a href="index.html">← Trang chủ</a>';
+if(!/^[a-z0-9-]+$/.test(id))A.innerHTML=`<p>Không tìm thấy bài. ${home}</p>`;
+else{const s=document.createElement('script');s.src='data/'+id+'.js';s.onload=init;s.onerror=()=>A.innerHTML=`<p>Không tìm thấy bài “${esc(id)}”. ${home}</p>`;document.head.appendChild(s)}
+function init(){Q=window.QUIZ;document.title=Q.title;const d=get('draft:'+id)||{};ans=d.ans||{};name=d.name||get('name')||'';render()}
+const save=()=>put('draft:'+id,{ans,name});
+const rev=()=>view==='result';
+const qsOf=s=>s.type==='cloze'?[...s.paras.join(' ').matchAll(/\{(\d+)\}/g)].map(m=>+m[1]):s.items.map(i=>i[0]);
+const optsOf=q=>{for(const s of Q.sections)if(s.items&&s.type!=='cloze'){const i=s.items.find(i=>i[0]===q);if(i&&Array.isArray(i[2]))return i[2]}};
+const ok=q=>{const k=Q.key[q];return typeof k==='string'?ans[q]===k:k.includes(norm(ans[q]))};
+const shown=q=>{const k=Q.key[q];return typeof k==='string'?k+'. '+optsOf(q)['ABCD'.indexOf(k)]:((Q.show||{})[q]||k.join(' / '))};
+const maxOf=()=>Q.sections.reduce((a,s)=>a+s.m*qsOf(s).length,0);
+const cnt=i=>{const q=qsOf(Q.sections[i]);return q.filter(x=>norm(ans[x])).length+'/'+q.length};
+const left=()=>Q.sections.reduce((a,s,i)=>a+qsOf(s).length-parseInt(cnt(i)),0);
+function inp(q){let c='t gap',fb='';if(rev()){c+=ok(q)?' ok':' bad';if(!ok(q))fb=`<span class="fb"> → ${esc(shown(q))}</span>`}
+ return `<input class="${c}" data-q="${q}" value="${esc(ans[q]||'')}" autocomplete="off" autocapitalize="off" spellcheck="false" ${rev()?'disabled':''}>${fb}`}
+function mcq([q,x,o]){const opts=o.map((t,i)=>{const L='ABCD'[i];let c='opt';if(rev()){if(L===Q.key[q])c+=' ok';else if(ans[q]===L)c+=' bad'}
+ return `<label class="${c}"><input type="radio" name="q${q}" value="${L}" data-q="${q}" ${ans[q]===L?'checked':''} ${rev()?'disabled':''}>${L}. ${esc(t)}</label>`}).join('');
+ return `<div class="q"><span class="n">${q}</span>${esc(x)}<div class="opts">${opts}</div>${rev()&&!ok(q)?`<div class="fb">${ans[q]?'':'Chưa trả lời. '}Đáp án: ${esc(shown(q))}</div>`:''}</div>`}
+function secHTML(i){const s=Q.sections[i];let h=`<div class="card"><h2>${esc(s.k)}. ${esc(s.title)} <span class="mut">(${s.m} mark${s.m>1?'s':''} per answer)</span></h2>`;
+ if(s.type==='cloze')h+=(s.head?`<p><b>${esc(s.head)}</b></p>`:'')+s.paras.map(p=>`<p style="line-height:2.3">${esc(p).replace(/\{(\d+)\}/g,(_,n)=>'<b>('+n+')</b>'+inp(+n))}</p>`).join('');
+ if(s.type==='fill')h+=s.items.map(([q,x,w,z])=>`<div class="q"><span class="n">${q}</span>${esc(x)} ${inp(q)} <span class="key">${esc(w)}</span> ${esc(z)}</div>`).join('');
+ if(s.type==='rewrite')h+=s.items.map(([q,t,w,a,b])=>`<div class="q"><span class="n">${q}</span>${esc(t)} <span class="key">${esc(w)}</span><div style="margin-top:6px">${esc(a)} ${inp(q)} ${esc(b)}</div></div>`).join('');
+ if(s.passage)h+=`<div class="q">${s.passage.map(p=>`<p>${esc(p)}</p>`).join('')}</div>`;
+ if(s.type==='mcq'||s.type==='reading')h+=s.items.map(mcq).join('');
+ return h+'</div>'}
+function render(){
+ if(view==='start'){const has=Object.keys(ans).length;A.innerHTML=`${home}<h1>${esc(Q.title)}</h1><p class="mut">${esc(Q.desc||'')} · ${Q.sections.reduce((a,s)=>a+qsOf(s).length,0)} câu · ${maxOf()} điểm</p><div class="card"><label for="nm"><b>Họ và tên</b></label><br><input id="nm" class="t wide" value="${esc(name)}" placeholder="Ví dụ: Nguyễn Văn A – Lớp 9A"><p class="mut">Tên này nằm trong mã kết quả để giáo viên biết bài của bạn.</p><button class="pri" id="go">${has?'Tiếp tục bài đang làm':'Bắt đầu làm bài'}</button><div class="fb" id="er"></div></div>`;
+  document.getElementById('go').onclick=()=>{const v=document.getElementById('nm').value.trim();if(!v){document.getElementById('er').textContent='Vui lòng nhập họ tên.';return}name=v;put('name',v);save();view='test';render()};return}
+ const tabs=Q.sections.length>1?`<div class="tabs">`+Q.sections.map((s,i)=>`<button class="${i===sec?'on':''}" data-t="${i}">${esc(s.k)} ${rev()?'':cnt(i)}</button>`).join('')+`</div>`:'';
+ if(view==='test'){const last=sec===Q.sections.length-1;A.innerHTML=`<div class="row">${home}<b>${esc(name)}</b></div>${tabs}${secHTML(sec)}<div class="row"><button id="pv" ${sec===0?'disabled':''}>← Phần trước</button>${last?'<button class="pri" id="sb"></button>':'<button class="pri" id="nx">Phần sau →</button>'}</div>`;
+  document.getElementById('pv').onclick=()=>{sec--;render();scrollTo(0,0)};
+  if(last){const b=document.getElementById('sb');b.textContent=sure&&left()?`Còn ${left()} câu trống – bấm lần nữa để nộp`:'Nộp bài';b.onclick=()=>{if(left()&&!sure){sure=true;render();return}submit()}}
+  else document.getElementById('nx').onclick=()=>{sec++;sure=false;render();scrollTo(0,0)}}
+ if(view==='result'){A.innerHTML=`<div class="row">${home}</div><h1>Kết quả</h1><div class="card"><div class="score">${res.t} / ${res.x}</div><table><tr>${Q.sections.map(s=>`<th>${esc(s.k)}</th>`).join('')}</tr><tr>${Q.sections.map(s=>`<td>${res.s[s.k]}/${s.m*qsOf(s).length}</td>`).join('')}</tr></table>
+  <div style="margin:12px 0"><b>Mã kết quả</b><div class="mut">Gửi mã này cho giáo viên (Zalo/email).</div><textarea id="cd" class="t wide" rows="3" readonly style="font-size:.8rem;max-width:100%">${esc(res.code)}</textarea><button id="cp">Sao chép mã</button> <span class="mut" id="cm"></span></div><button id="rt">Làm lại từ đầu</button></div>${tabs}${secHTML(sec)}`;
+  document.getElementById('cd').onclick=e=>e.target.select();
+  document.getElementById('cp').onclick=()=>{const c=document.getElementById('cd');c.select();let o=false;try{o=document.execCommand('copy')}catch(e){}try{if(navigator.clipboard){navigator.clipboard.writeText(c.value);o=true}}catch(e){}document.getElementById('cm').textContent=o?'Đã sao chép.':'Hãy chép mã trong ô.'};
+  document.getElementById('rt').onclick=()=>{ans={};save();view='start';sec=0;res=null;sure=false;render()}}
+ A.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{sec=+b.dataset.t;sure=false;render()})}
+document.addEventListener('input',e=>{const q=e.target.dataset&&e.target.dataset.q;if(!q||rev()||e.target.type==='radio')return;ans[q]=e.target.value;save();upd()});
+document.addEventListener('change',e=>{const t=e.target;if(t.type==='radio'&&!rev()){ans[t.dataset.q]=t.value;save();upd()}});
+function upd(){document.querySelectorAll('[data-t]').forEach(b=>{const i=+b.dataset.t;b.textContent=Q.sections[i].k+' '+cnt(i)})}
+function submit(){let t=0,s={},w=[];Q.sections.forEach(x=>{s[x.k]=0;qsOf(x).forEach(q=>{if(ok(q))s[x.k]+=x.m;else w.push(q)});t+=s[x.k]});
+ const x=maxOf(),ts=Date.now();res={t,x,s,w,code:btoa(unescape(encodeURIComponent(JSON.stringify({i:id,n:name,t,x,s,w,ts}))))};put('done:'+id,{t,x,ts});view='result';sec=0;render();scrollTo(0,0)}
+</script></body></html>

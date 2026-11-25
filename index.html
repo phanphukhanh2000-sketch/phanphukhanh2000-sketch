@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Trau dồi tiếng Anh cùng Kian</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--tx:#1c2233;--mut:#69708a;--pri:#2b4fb8;--pt:#fff;--ok:#1a7f4b;--okb:#e3f5ea;--bad:#c0392b;--badb:#fbe7e4;--bd:#d9dde8;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151f;--card:#1b2030;--tx:#e8eaf2;--mut:#98a0b8;--pri:#7c9bff;--pt:#10131c;--ok:#5fd18f;--okb:#183526;--bad:#ff8a7a;--badb:#3a1e1b;--bd:#313852;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12151f;--card:#1b2030;--tx:#e8eaf2;--mut:#98a0b8;--pri:#7c9bff;--pt:#10131c;--ok:#5fd18f;--okb:#183526;--bad:#ff8a7a;--badb:#3a1e1b;--bd:#313852;color-scheme:dark}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+main{max-width:760px;margin:0 auto;padding:16px 14px 80px}
+h1{font-size:1.35rem;margin:6px 0 2px}h2{font-size:1.05rem;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin:12px 0}
+.mut{color:var(--mut);font-size:.9rem}
+button{font:inherit;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:9px 14px;cursor:pointer}
+button.pri{background:var(--pri);color:var(--pt);border-color:var(--pri);font-weight:600}
+button:disabled{opacity:.5;cursor:default}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:2px 0 6px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5}
+.tabs button{flex:0 0 auto;white-space:nowrap}.tabs button.on{background:var(--pri);color:var(--pt);border-color:var(--pri)}
+input.t{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:4px 8px;min-width:0}
+input.gap{width:8.5em;margin:0 3px}input.wide{width:100%;max-width:420px;margin:4px 0}
+input.ok,.opt.ok{border-color:var(--ok);background:var(--okb)}input.bad,.opt.bad{border-color:var(--bad);background:var(--badb)}
+.q{margin:14px 0;padding-bottom:10px;border-bottom:1px dashed var(--bd)}.q:last-child{border:0}
+.n{font-weight:700;margin-right:8px}.key{font-weight:700;border:1px solid var(--bd);border-radius:6px;padding:0 6px;margin-left:4px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}@media(max-width:520px){.opts{grid-template-columns:1fr}}
+.opt{display:flex;gap:8px;align-items:center;border:1px solid var(--bd);border-radius:8px;padding:7px 10px;cursor:pointer}
+.fb{font-size:.88rem;margin-top:4px;color:var(--bad)}.fb.g{color:var(--ok)}
+.score{font-size:2.4rem;font-weight:800;color:var(--pri)}
+table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{padding:6px 8px;border-bottom:1px solid var(--bd);text-align:left}
+.sc{overflow-x:auto}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}.grid .card{margin:0;display:flex;flex-direction:column;gap:6px}
+a.btn{display:inline-block;text-decoration:none;text-align:center;border-radius:10px;padding:9px 14px;background:var(--pri);color:var(--pt);font-weight:600;margin-top:auto}
+.tag{font-size:.75rem;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}.done{color:var(--ok);font-size:.88rem}</style></head><body><main>
+<h1>Chọn một đề bài phù hợp với bản thân để thử sức nhé </h1><p class="mut"> Lưu ý khi làm bài phải tập trung, tránh các tác nhân gây xao nhãng ảnh hưởng đến việc học nhé.</p>
+<input id="sr" class="t wide" placeholder="Tìm bài…" style="max-width:100%"><div id="ls"></div>
+<p class="mut" style="margin-top:28px"><a href="teacher.html">Dành cho giáo viên</a></p></main>
+<script>
+// Thêm bài mới: thêm một dòng vào LIST và một file trong thư mục data/
+const LIST=[
+ {id:'review1',tag:'Review',title:'Review 1 – Units 1 & 2',desc:'Điền từ, đổi dạng từ, viết lại câu, trắc nghiệm.',n:42,max:50},
+ {id:'reading-slow-travel',tag:'Reading',title:'Reading: Slow Travel',desc:'Bài đọc hiểu mẫu, 8 câu trắc nghiệm.',n:8,max:8}];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function draw(){const f=document.getElementById('sr').value.toLowerCase().trim();const tags=[...new Set(LIST.map(x=>x.tag))];let h='';
+ tags.forEach(t=>{const it=LIST.filter(x=>x.tag===t&&(x.title+' '+x.desc+' '+x.tag).toLowerCase().includes(f));if(!it.length)return;
+  h+=`<h2 style="margin-top:22px">${esc(t)}</h2><div class="grid">`+it.map(x=>{let d=null;try{d=JSON.parse(localStorage.getItem('done:'+x.id))}catch(e){}
+   return `<div class="card"><div class="tag">${esc(x.tag)}</div><b>${esc(x.title)}</b><div class="mut">${esc(x.desc)}</div><div class="mut">${x.n} câu · ${x.max} điểm</div>${d?`<div class="done">Đã làm: ${d.t}/${d.x}</div>`:''}<a class="btn" href="quiz.html?id=${encodeURIComponent(x.id)}">${d?'Làm lại':'Làm bài'}</a></div>`}).join('')+'</div>'});
+ document.getElementById('ls').innerHTML=h||'<p class="mut">Không có bài phù hợp.</p>'}
+document.getElementById('sr').oninput=draw;draw();
+</script></body></html>

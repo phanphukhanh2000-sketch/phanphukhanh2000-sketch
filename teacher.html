@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Bảng điểm</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--tx:#1c2233;--mut:#69708a;--pri:#2b4fb8;--pt:#fff;--ok:#1a7f4b;--okb:#e3f5ea;--bad:#c0392b;--badb:#fbe7e4;--bd:#d9dde8;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151f;--card:#1b2030;--tx:#e8eaf2;--mut:#98a0b8;--pri:#7c9bff;--pt:#10131c;--ok:#5fd18f;--okb:#183526;--bad:#ff8a7a;--badb:#3a1e1b;--bd:#313852;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12151f;--card:#1b2030;--tx:#e8eaf2;--mut:#98a0b8;--pri:#7c9bff;--pt:#10131c;--ok:#5fd18f;--okb:#183526;--bad:#ff8a7a;--badb:#3a1e1b;--bd:#313852;color-scheme:dark}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+main{max-width:760px;margin:0 auto;padding:16px 14px 80px}
+h1{font-size:1.35rem;margin:6px 0 2px}h2{font-size:1.05rem;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin:12px 0}
+.mut{color:var(--mut);font-size:.9rem}
+button{font:inherit;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:9px 14px;cursor:pointer}
+button.pri{background:var(--pri);color:var(--pt);border-color:var(--pri);font-weight:600}
+button:disabled{opacity:.5;cursor:default}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:2px 0 6px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5}
+.tabs button{flex:0 0 auto;white-space:nowrap}.tabs button.on{background:var(--pri);color:var(--pt);border-color:var(--pri)}
+input.t{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:4px 8px;min-width:0}
+input.gap{width:8.5em;margin:0 3px}input.wide{width:100%;max-width:420px;margin:4px 0}
+input.ok,.opt.ok{border-color:var(--ok);background:var(--okb)}input.bad,.opt.bad{border-color:var(--bad);background:var(--badb)}
+.q{margin:14px 0;padding-bottom:10px;border-bottom:1px dashed var(--bd)}.q:last-child{border:0}
+.n{font-weight:700;margin-right:8px}.key{font-weight:700;border:1px solid var(--bd);border-radius:6px;padding:0 6px;margin-left:4px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}@media(max-width:520px){.opts{grid-template-columns:1fr}}
+.opt{display:flex;gap:8px;align-items:center;border:1px solid var(--bd);border-radius:8px;padding:7px 10px;cursor:pointer}
+.fb{font-size:.88rem;margin-top:4px;color:var(--bad)}.fb.g{color:var(--ok)}
+.score{font-size:2.4rem;font-weight:800;color:var(--pri)}
+table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{padding:6px 8px;border-bottom:1px solid var(--bd);text-align:left}
+.sc{overflow-x:auto}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+</style></head><body><main>
+<div class="row"><a href="index.html">← Trang chủ</a></div><h1>Bảng điểm</h1>
+<div class="card"><b>Dán mã kết quả của học sinh</b><div class="mut">Mỗi mã một dòng. Dữ liệu chỉ lưu trên trình duyệt của bạn.</div><textarea id="pc" class="t wide" rows="3" style="max-width:100%"></textarea><button class="pri" id="ad">Thêm vào bảng</button> <span class="mut" id="pm"></span></div>
+<div class="card sc"><div class="row"><select id="fl" class="t"></select><span><button id="cv">Tải CSV</button> <button id="cl">Xóa tất cả</button></span></div><div id="bt"></div></div></main>
+<script>
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let rows=[],sure=false;try{rows=JSON.parse(localStorage.getItem('codes')||'[]')}catch(e){}
+const put=()=>{try{localStorage.setItem('codes',JSON.stringify(rows))}catch(e){}};
+const fmt=t=>new Date(t).toLocaleString('vi-VN',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+function add(){const tx=document.getElementById('pc');let n=0,bad=0;tx.value.split(/\s+/).filter(Boolean).forEach(c=>{try{const o=JSON.parse(decodeURIComponent(escape(atob(c))));
+ if(typeof o.i!=='string'||typeof o.t!=='number'||typeof o.x!=='number'||!o.s||typeof o.s!=='object'||!Array.isArray(o.w))throw 0;
+ const r={i:o.i.slice(0,60),n:String(o.n||'?').slice(0,80),t:o.t,x:o.x,s:o.s,w:o.w.slice(0,100),ts:Number(o.ts)||Date.now()};
+ if(!rows.some(y=>y.n===r.n&&y.i===r.i&&y.ts===r.ts)){rows.push(r);n++}}catch(e){bad++}});put();tx.value='';
+ document.getElementById('pm').textContent='Đã thêm '+n+' bài'+(bad?', '+bad+' mã không hợp lệ':'')+'.';draw()}
+const cur=()=>{const f=document.getElementById('fl').value;return rows.filter(r=>!f||r.i===f).sort((a,b)=>b.ts-a.ts)};
+function draw(){const fl=document.getElementById('fl'),v=fl.value;const ids=[...new Set(rows.map(r=>r.i))];
+ fl.innerHTML='<option value="">Tất cả bài</option>'+ids.map(i=>`<option value="${esc(i)}">${esc(i)}</option>`).join('');fl.value=ids.includes(v)?v:'';
+ const b=cur(),t=document.getElementById('bt');if(!b.length){t.innerHTML='<p class="mut">Chưa có dữ liệu.</p>';return}
+ t.innerHTML=`<p class="mut">${b.length} bài nộp</p><table><tr><th>Học sinh</th><th>Bài</th><th>Điểm</th><th>Từng phần</th><th>Nộp lúc</th><th>Câu sai</th></tr>`+b.map(r=>`<tr><td>${esc(r.n)}</td><td>${esc(r.i)}</td><td><b>${esc(r.t)}/${esc(r.x)}</b></td><td>${Object.entries(r.s).map(([k,v])=>esc(k)+':'+esc(v)).join(' ')}</td><td>${fmt(r.ts)}</td><td>${esc(r.w.join(', '))}</td></tr>`).join('')+'</table>'}
+document.getElementById('ad').onclick=add;document.getElementById('fl').onchange=draw;
+document.getElementById('cv').onclick=()=>{const q=v=>'"'+String(v).replace(/"/g,'""')+'"';const l=[['Học sinh','Bài','Điểm','Tối đa','Từng phần','Nộp lúc','Câu sai'].map(q).join(',')].concat(cur().map(r=>[r.n,r.i,r.t,r.x,Object.entries(r.s).map(([k,v])=>k+':'+v).join(' '),new Date(r.ts).toISOString(),r.w.join(' ')].map(q).join(',')));
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+l.join('\n')],{type:'text/csv'}));a.download='bang-diem.csv';a.click()};
+document.getElementById('cl').onclick=e=>{if(!sure){sure=true;e.target.textContent='Bấm lần nữa để xóa';return}rows=[];put();sure=false;e.target.textContent='Xóa tất cả';draw()};
+draw();
+</script></body></html>
