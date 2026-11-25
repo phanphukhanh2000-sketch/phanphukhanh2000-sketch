@@ -1,30 +1,44 @@
 <!DOCTYPE html>
 <html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Làm bài</title>
 <style>
-:root{--bg:#f6f7fb;--card:#fff;--tx:#1c2233;--mut:#69708a;--pri:#2b4fb8;--pt:#fff;--ok:#1a7f4b;--okb:#e3f5ea;--bad:#c0392b;--badb:#fbe7e4;--bd:#d9dde8;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151f;--card:#1b2030;--tx:#e8eaf2;--mut:#98a0b8;--pri:#7c9bff;--pt:#10131c;--ok:#5fd18f;--okb:#183526;--bad:#ff8a7a;--badb:#3a1e1b;--bd:#313852;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#12151f;--card:#1b2030;--tx:#e8eaf2;--mut:#98a0b8;--pri:#7c9bff;--pt:#10131c;--ok:#5fd18f;--okb:#183526;--bad:#ff8a7a;--badb:#3a1e1b;--bd:#313852;color-scheme:dark}
-html,body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
-main{max-width:760px;margin:0 auto;padding:16px 14px 80px}
-h1{font-size:1.35rem;margin:6px 0 2px}h2{font-size:1.05rem;margin:0 0 10px}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin:12px 0}
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+:root{--bg:#f1f6ff;--card:#fff;--tx:#1d2742;--mut:#667195;--pri:#2f6bff;--pri2:#1f4fd8;--pt:#fff;--ok:#15803d;--okb:#e6f7ec;--bad:#c62828;--badb:#fdecec;--bd:#d9e3f7;--sh:0 4px 18px rgba(47,107,255,.10);--soft:#eaf1ff;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1526;--card:#182038;--tx:#e8ecf8;--mut:#9aa6c8;--pri:#7aa2ff;--pri2:#5b86f5;--pt:#0d1426;--ok:#6ee7a0;--okb:#173526;--bad:#ff9a8f;--badb:#3a1f22;--bd:#2c3858;--sh:0 4px 18px rgba(0,0,0,.35);--soft:#1f2a4a;color-scheme:dark}}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 Nunito,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+main{max-width:780px;margin:0 auto;padding:18px 14px 80px}
+a{color:var(--pri2);font-weight:600}
+h1{font-size:1.5rem;margin:8px 0 2px;font-weight:800}h2{font-size:1.08rem;margin:0 0 12px;font-weight:800}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:18px;margin:14px 0;box-shadow:var(--sh)}
 .mut{color:var(--mut);font-size:.9rem}
-button{font:inherit;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:9px 14px;cursor:pointer}
-button.pri{background:var(--pri);color:var(--pt);border-color:var(--pri);font-weight:600}
-button:disabled{opacity:.5;cursor:default}
-.tabs{display:flex;gap:6px;overflow-x:auto;padding:2px 0 6px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5}
-.tabs button{flex:0 0 auto;white-space:nowrap}.tabs button.on{background:var(--pri);color:var(--pt);border-color:var(--pri)}
-input.t{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:4px 8px;min-width:0}
-input.gap{width:8.5em;margin:0 3px}input.wide{width:100%;max-width:420px;margin:4px 0}
+button{font:inherit;font-weight:600;border-radius:12px;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:9px 16px;cursor:pointer;transition:transform .08s,box-shadow .15s}
+button:hover:not(:disabled){box-shadow:var(--sh)}button:active:not(:disabled){transform:scale(.97)}
+button.pri{background:linear-gradient(135deg,var(--pri),var(--pri2));color:var(--pt);border-color:transparent;font-weight:700}
+button:disabled{opacity:.45;cursor:default}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:6px 2px 10px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5}
+.tabs button{flex:0 0 auto;white-space:nowrap;border-radius:999px;padding:6px 16px}.tabs button.on{background:var(--pri);color:var(--pt);border-color:var(--pri)}
+input.t{font:inherit;color:var(--tx);background:var(--card);border:1.5px solid var(--bd);border-radius:10px;padding:5px 10px;min-width:0;transition:border-color .15s,box-shadow .15s}
+input.t:focus,textarea.t:focus,select.t:focus{outline:0;border-color:var(--pri);box-shadow:0 0 0 3px var(--soft)}
+textarea.t,select.t{font:inherit;color:var(--tx);background:var(--card);border:1.5px solid var(--bd);border-radius:10px;padding:8px 10px;margin:6px 0;display:block}
+input.gap{width:8.5em;margin:0 3px;text-align:center}input.wide{width:100%;max-width:420px;margin:6px 0;box-sizing:border-box}textarea.wide{width:100%;box-sizing:border-box}
 input.ok,.opt.ok{border-color:var(--ok);background:var(--okb)}input.bad,.opt.bad{border-color:var(--bad);background:var(--badb)}
-.q{margin:14px 0;padding-bottom:10px;border-bottom:1px dashed var(--bd)}.q:last-child{border:0}
-.n{font-weight:700;margin-right:8px}.key{font-weight:700;border:1px solid var(--bd);border-radius:6px;padding:0 6px;margin-left:4px}
-.opts{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}@media(max-width:520px){.opts{grid-template-columns:1fr}}
-.opt{display:flex;gap:8px;align-items:center;border:1px solid var(--bd);border-radius:8px;padding:7px 10px;cursor:pointer}
-.fb{font-size:.88rem;margin-top:4px;color:var(--bad)}.fb.g{color:var(--ok)}
-.score{font-size:2.4rem;font-weight:800;color:var(--pri)}
-table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{padding:6px 8px;border-bottom:1px solid var(--bd);text-align:left}
+.q{margin:16px 0;padding-bottom:12px;border-bottom:1px dashed var(--bd)}.q:last-child{border:0}
+.n{display:inline-block;min-width:1.7em;height:1.7em;line-height:1.7em;text-align:center;border-radius:50%;background:var(--soft);color:var(--pri2);font-weight:800;font-size:.85rem;margin-right:8px}
+.key{font-weight:800;font-size:.85rem;border-radius:8px;padding:1px 8px;margin-left:4px;background:var(--soft);color:var(--pri2)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}@media(max-width:520px){.opts{grid-template-columns:1fr}}
+.opt{display:flex;gap:8px;align-items:center;border:1.5px solid var(--bd);border-radius:12px;padding:9px 12px;cursor:pointer;transition:background .12s,border-color .12s}
+.opt:hover{background:var(--soft)}.opt:has(input:checked){border-color:var(--pri);background:var(--soft)}
+.fb{font-size:.88rem;margin-top:4px;color:var(--bad);font-weight:600}.fb.g{color:var(--ok)}
+.score{font-size:2.8rem;font-weight:800;color:var(--pri2);line-height:1.1}
+table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{padding:8px 10px;border-bottom:1px solid var(--bd);text-align:left}th{color:var(--mut);font-weight:700}
 .sc{overflow-x:auto}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.bar{height:8px;background:var(--soft);border-radius:99px;overflow:hidden;margin:6px 0 2px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--pri),#5ec8ff);border-radius:99px;transition:width .25s}
+.hero{position:relative;overflow:hidden;border-radius:24px;padding:26px 22px;margin:6px 0 14px;color:#fff;background:linear-gradient(135deg,#2f6bff,#5aa2ff 70%,#7fd0ff);box-shadow:var(--sh)}
+.hero:after{content:"";position:absolute;right:-40px;top:-40px;width:170px;height:170px;border-radius:50%;background:rgba(255,255,255,.16)}
+.hero h1{color:#fff;font-size:1.7rem;margin:0}.hero p{margin:6px 0 0;opacity:.95;position:relative}
+.chip{display:inline-block;background:var(--soft);color:var(--pri2);border-radius:999px;padding:2px 10px;font-size:.78rem;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}.grid .card{margin:0;display:flex;flex-direction:column;gap:6px;border-top:4px solid var(--pri);transition:transform .15s}.grid .card:hover{transform:translateY(-3px)}
+a.btn{display:inline-block;text-decoration:none;text-align:center;border-radius:12px;padding:9px 14px;background:linear-gradient(135deg,var(--pri),var(--pri2));color:var(--pt);font-weight:700;margin-top:auto}
+.done{color:var(--ok);font-size:.88rem;font-weight:700}
 </style></head><body><main id="app"></main>
 <script>
 const id=(new URLSearchParams(location.search).get('id')||'').toLowerCase(),A=document.getElementById('app');
@@ -34,7 +48,8 @@ let Q,ans={},name='',view='start',sec=0,res=null,sure=false;
 const get=k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},put=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
 const home='<a href="index.html">← Trang chủ</a>';
 if(!/^[a-z0-9-]+$/.test(id))A.innerHTML=`<p>Không tìm thấy bài. ${home}</p>`;
-else{const s=document.createElement('script');s.src='data/'+id+'.js';s.onload=init;s.onerror=()=>A.innerHTML=`<p>Không tìm thấy bài “${esc(id)}”. ${home}</p>`;document.head.appendChild(s)}
+else load('data/'+id+'.js',()=>load(id+'.js',()=>A.innerHTML=`<p>Không tìm thấy bài “${esc(id)}”. ${home}</p>`));
+function load(src,fail){const s=document.createElement('script');s.src=src;s.onload=init;s.onerror=fail;document.head.appendChild(s)}
 function init(){Q=window.QUIZ;document.title=Q.title;const d=get('draft:'+id)||{};ans=d.ans||{};name=d.name||get('name')||'';render()}
 const save=()=>put('draft:'+id,{ans,name});
 const rev=()=>view==='result';
@@ -61,7 +76,7 @@ function render(){
  if(view==='start'){const has=Object.keys(ans).length;A.innerHTML=`${home}<h1>${esc(Q.title)}</h1><p class="mut">${esc(Q.desc||'')} · ${Q.sections.reduce((a,s)=>a+qsOf(s).length,0)} câu · ${maxOf()} điểm</p><div class="card"><label for="nm"><b>Họ và tên</b></label><br><input id="nm" class="t wide" value="${esc(name)}" placeholder="Ví dụ: Nguyễn Văn A – Lớp 9A"><p class="mut">Tên này nằm trong mã kết quả để giáo viên biết bài của bạn.</p><button class="pri" id="go">${has?'Tiếp tục bài đang làm':'Bắt đầu làm bài'}</button><div class="fb" id="er"></div></div>`;
   document.getElementById('go').onclick=()=>{const v=document.getElementById('nm').value.trim();if(!v){document.getElementById('er').textContent='Vui lòng nhập họ tên.';return}name=v;put('name',v);save();view='test';render()};return}
  const tabs=Q.sections.length>1?`<div class="tabs">`+Q.sections.map((s,i)=>`<button class="${i===sec?'on':''}" data-t="${i}">${esc(s.k)} ${rev()?'':cnt(i)}</button>`).join('')+`</div>`:'';
- if(view==='test'){const last=sec===Q.sections.length-1;A.innerHTML=`<div class="row">${home}<b>${esc(name)}</b></div>${tabs}${secHTML(sec)}<div class="row"><button id="pv" ${sec===0?'disabled':''}>← Phần trước</button>${last?'<button class="pri" id="sb"></button>':'<button class="pri" id="nx">Phần sau →</button>'}</div>`;
+ if(view==='test'){const last=sec===Q.sections.length-1;A.innerHTML=`<div class="row">${home}<b>${esc(name)}</b></div><div class="bar"><i id="pb" style="width:${pct()}%"></i></div>${tabs}${secHTML(sec)}<div class="row"><button id="pv" ${sec===0?'disabled':''}>← Phần trước</button>${last?'<button class="pri" id="sb"></button>':'<button class="pri" id="nx">Phần sau →</button>'}</div>`;
   document.getElementById('pv').onclick=()=>{sec--;render();scrollTo(0,0)};
   if(last){const b=document.getElementById('sb');b.textContent=sure&&left()?`Còn ${left()} câu trống – bấm lần nữa để nộp`:'Nộp bài';b.onclick=()=>{if(left()&&!sure){sure=true;render();return}submit()}}
   else document.getElementById('nx').onclick=()=>{sec++;sure=false;render();scrollTo(0,0)}}
@@ -73,7 +88,8 @@ function render(){
  A.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{sec=+b.dataset.t;sure=false;render()})}
 document.addEventListener('input',e=>{const q=e.target.dataset&&e.target.dataset.q;if(!q||rev()||e.target.type==='radio')return;ans[q]=e.target.value;save();upd()});
 document.addEventListener('change',e=>{const t=e.target;if(t.type==='radio'&&!rev()){ans[t.dataset.q]=t.value;save();upd()}});
-function upd(){document.querySelectorAll('[data-t]').forEach(b=>{const i=+b.dataset.t;b.textContent=Q.sections[i].k+' '+cnt(i)})}
+const pct=()=>{const t=Q.sections.reduce((a,s)=>a+qsOf(s).length,0);return Math.round((t-left())/t*100)};
+function upd(){const pb=document.getElementById('pb');if(pb)pb.style.width=pct()+'%';document.querySelectorAll('[data-t]').forEach(b=>{const i=+b.dataset.t;b.textContent=Q.sections[i].k+' '+cnt(i)})}
 function submit(){let t=0,s={},w=[];Q.sections.forEach(x=>{s[x.k]=0;qsOf(x).forEach(q=>{if(ok(q))s[x.k]+=x.m;else w.push(q)});t+=s[x.k]});
  const x=maxOf(),ts=Date.now();res={t,x,s,w,code:btoa(unescape(encodeURIComponent(JSON.stringify({i:id,n:name,t,x,s,w,ts}))))};put('done:'+id,{t,x,ts});view='result';sec=0;render();scrollTo(0,0)}
 </script></body></html>
