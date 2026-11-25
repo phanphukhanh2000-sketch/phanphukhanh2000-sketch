@@ -16,6 +16,9 @@ window.SITE = {
 
   // Ảnh trong banner ở đầu trang chủ (không bắt buộc)
   hero: {
-    image: 'momonga-nanka-3840x2160-15924.png'     // tên file hoặc link ảnh. Để trống '' = dùng màu xanh chuyển sắc
+    image: 'momonga-nanka-3840x2160-15924.png',    // tên file hoặc link ảnh. Để trống '' = dùng màu xanh chuyển sắc
+    layout: 'split', // 'split' = tiêu đề bên trái, mô tả bên phải, chừa giữa cho ảnh. 'left' = cả hai dòng xếp bên trái như cũ
+    height: 170,     // chiều cao banner (px), từ 100 đến 400
+    position: 'center' // phần ảnh nào hiện ở giữa banner, ví dụ 'center', 'top', 'center 30%'
   }
 };
