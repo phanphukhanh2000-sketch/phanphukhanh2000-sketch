@@ -10,8 +10,8 @@ window.SITE = {
 
   // Ảnh nền toàn trang
   background: {
-    image: 'pexels-codioful-6985267.jpg',    // tên file trong repository (ví dụ 'bg.jpg') hoặc link ảnh (https://...). Để trống '' = không dùng ảnh
-    overlay: 0.85 // độ phủ màu nền lên ảnh, từ 0 đến 1. Số càng lớn ảnh càng mờ, chữ càng dễ đọc. Gợi ý 0.8–0.92
+    image: 'hachiware-chiikawa-3840x2160-15906.jpg',    // tên file trong repository (ví dụ 'bg.jpg') hoặc link ảnh (https://...). Để trống '' = không dùng ảnh
+    overlay: 0.92 // độ phủ màu nền lên ảnh, từ 0 đến 1. Số càng lớn ảnh càng mờ, chữ càng dễ đọc. Gợi ý 0.8–0.92
   },
 
   // Ảnh trong banner ở đầu trang chủ (không bắt buộc)
